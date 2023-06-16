@@ -19,11 +19,13 @@
 
 const methodCall = function(root, method, params, cb, after) {
   let left;
+  // Add support for batch job authentication key
+  params.push({batchJobKey: process.env.BATCH_JOB_KEY});
   if (after == null) { after = ret => ret; }
   const apply = (left = (Job._ddp_apply != null ? Job._ddp_apply[root.root != null ? root.root : root] : undefined)) != null ? left : Job._ddp_apply;
   if (typeof apply !== 'function') {
      throw new Error("Job remote method call error, no valid invocation method found.");
-   }
+  }
   const name = `${root.root != null ? root.root : root}_${method}`;
   if (cb && (typeof cb === 'function')) {
     return apply(name, params, (err, res) => {
